@@ -1,0 +1,399 @@
+
+<script>
+function mypopup(url,width,height)
+ {
+   width=window.screen.width;
+   height=window.screen.height;
+   mywindow = window.open (url,"mywindow","location=0,status=1,scrollbars=1,resizable=1,menubar=0,toolbar=yes,width="+width+",height="+height);
+   mywindow.focus();
+ } 
+ function trim(value) {
+   var temp = value;
+   var obj = /^(\s*)([\W\w]*)(\b\s*$)/;
+   if (obj.test(temp)) { temp = temp.replace(obj, '$2'); }
+   var obj = / +/g;
+   temp = temp.replace(obj, " ");
+   if (temp == " ") { temp = ""; }
+   return temp;
+}
+function isNumeric(obj_nam){
+  var x=0;
+	  x = trim(document.getElementById(obj_nam).value);
+	 // alert(x);
+//  var anum=/(^\d+$)|(^\d+\.\d+$)/;
+  var anum=/(^\d+$)/;
+  if (anum.test(x)){    
+	return true;
+  }else{
+	  return false;             
+  }
+}
+function isInteger(s){
+	var i;
+    for (i = 0; i < s.length; i++){   
+        // Check that current character is number.
+        var c = s.charAt(i);
+        if (((c < "0") || (c > "9"))) return false;
+    }
+    // All characters are numbers.
+    return true;
+}
+
+function stripCharsInBag(s, bag){
+	var i;
+    var returnString = "";
+    // Search through string's characters one by one.
+    // If character is not in bag, append to returnString.
+    for (i = 0; i < s.length; i++){   
+        var c = s.charAt(i);
+        if (bag.indexOf(c) == -1) returnString += c;
+    }
+    return returnString;
+}
+
+function daysInFebruary (year){
+	// February has 29 days in any year evenly divisible by four,
+    // EXCEPT for centurial years which are not also divisible by 400.
+    return (((year % 4 == 0) && ( (!(year % 100 == 0)) || (year % 400 == 0))) ? 29 : 28 );
+}
+function DaysArray(n) {
+	for (var i = 1; i <= n; i++) {
+		this[i] = 31
+		if (i==4 || i==6 || i==9 || i==11) {this[i] = 30}
+		if (i==2) {this[i] = 29}
+   } 
+   return this
+}
+
+function isDate(dtStr){
+	var daysInMonth = DaysArray(12)
+	var pos1=dtStr.indexOf(dtCh)
+	var pos2=dtStr.indexOf(dtCh,pos1+1)
+	var strDay=dtStr.substring(0,pos1)
+	var strMonth=dtStr.substring(pos1+1,pos2)
+	var strYear=dtStr.substring(pos2+1)
+	strYr=strYear
+	if (strDay.charAt(0)=="0" && strDay.length>1) strDay=strDay.substring(1)
+	if (strMonth.charAt(0)=="0" && strMonth.length>1) strMonth=strMonth.substring(1)
+	for (var i = 1; i <= 3; i++) {
+		if (strYr.charAt(0)=="0" && strYr.length>1) strYr=strYr.substring(1)
+	}
+	month=parseInt(strMonth)
+	day=parseInt(strDay)
+	year=parseInt(strYr)
+	if (pos1==-1 || pos2==-1){
+		alert("The date format should be : dd-mm-yyyy")
+		return false
+	}
+	if (strMonth.length<1 || month<1 || month>12){
+		alert("Please enter a valid month")
+		return false
+	}
+	if (strDay.length<1 || day<1 || day>31 || (month==2 && day>daysInFebruary(year)) || day > daysInMonth[month]){
+		alert("Please enter a valid day")
+		return false
+	}
+	//if (strYear.length != 4 || year==0 || year<minYear || year>maxYear){
+	if (strYear.length != 4 || year==0){
+		alert("Please enter a valid 4 digit year between "+minYear+" and "+maxYear)
+		return false
+	}
+	if (dtStr.indexOf(dtCh,pos2+1)!=-1 || isInteger(stripCharsInBag(dtStr, dtCh))==false){
+		alert("Please enter a valid date")
+		return false
+	}
+	return true
+}
+ 
+ function validateLogin(){ 	
+	if(trim(document.getElementById('txtregno').value) == '')
+ 	{
+		alert("Please enter  registration no");
+		document.getElementById('txtregno').focus();
+		return false; 
+ 	}else if(!isNumeric('txtregno')){
+		alert("Registration no is invalid..");
+		document.getElementById('txtregno').focus();
+		return false; 
+	}
+	/*else if(trim(document.getElementById('txtregno').value).length > 8)
+ 	{
+		alert("Registration no is invalid");
+		document.getElementById('txtregno').focus();
+		return false; 
+ 	}*/
+	/*if(trim(document.getElementById('txtdob').value) == '')
+ 	{
+		alert("Please enter date of birth");
+		document.getElementById('txtdob').focus();
+		return false; 
+ 	}else if (isDate(document.getElementById('txtdob').value)==false){		
+		document.getElementById('txtdob').focus();
+		return false
+	}*/	
+		
+	if(trim(document.getElementById('txtpass').value) == '')
+ 	{
+		alert("Please enter a password");
+		document.getElementById('txtpass').focus();
+		return false; 
+ 	}else if(trim(document.getElementById('txtpass').value).length!= 8)
+ 	{
+		alert("password is invalid");
+		document.getElementById('txtpass').focus();
+		return false; 
+ 	}
+	//document.getElementById('sub').value=1;
+	//document.login_frm.action="userlogin.php";
+	//document.login_frm.submit();
+	checkvalue();		 
+ }
+ function validateLoginImpCheck(){ 	
+ 
+ //////after capcha implemented code start//////////////
+	if(typeof LOGINCAPCHA != 'undefined' && LOGINCAPCHA != null)
+	{
+		if(trim(document.getElementById('txtregno').value) == '')
+		{
+			$("#loginError").html("Please enter registration no");
+			document.getElementById('txtregno').focus();
+			return false; 
+		}else if(trim(document.getElementById('txtpass').value) == '')
+		{
+			$("#loginError").html("Please enter a password");
+			document.getElementById('txtpass').focus();
+			return false; 
+		}else if(trim(document.getElementById('txtpass').value).length!= 8)
+		{
+			$("#loginError").html("password is invalid");
+			document.getElementById('txtpass').focus();
+			return false; 
+		}else 
+		{
+			var pass=document.getElementById('txtpass').value;
+			if(EnableCaptcha=='Y')
+				var hash = MD5(pass+trim(document.getElementById("security_check").value));
+			else
+				var hash = MD5(pass);
+			document.getElementById('txtpass').value=hash;
+			//return true;
+		}
+		if(!loginvalidationcheck(pass))
+			return false;
+	}
+	//////after capcha implemented code END//////////////
+	
+	//////before capcha implemented code//////////////
+	if(trim(document.getElementById('txtregno').value) == '')
+ 	{
+		alert("Please enter registration no");
+		document.getElementById('txtregno').focus();
+		return false; 
+ 	}else if(!isNumeric('txtregno')){
+		alert("Registration no is invalid..");
+		document.getElementById('txtregno').focus();
+		return false; 
+	}
+	
+	/*else if(trim(document.getElementById('txtregno').value).length > 8)
+ 	{
+		alert("Registration no is invalid");
+		document.getElementById('txtregno').focus();
+		return false; 
+ 	}*/
+	/*if(trim(document.getElementById('txtdob').value) == '')
+ 	{
+		alert("Please enter date of birth");
+		document.getElementById('txtdob').focus();
+		return false; 
+ 	}else if (isDate(document.getElementById('txtdob').value)==false){		
+		document.getElementById('txtdob').focus();
+		return false
+	}*/	
+		
+	if(trim(document.getElementById('txtpass').value) == '')
+ 	{
+		alert("Please enter a password");
+		document.getElementById('txtpass').focus();
+		return false; 
+ 	}else if(trim(document.getElementById('txtpass').value).length!= 8)
+ 	{
+		alert("password is invalid");
+		document.getElementById('txtpass').focus();
+		return false; 
+ 	}else 
+	{
+		var pass=document.getElementById('txtpass').value;
+	   //document.getElementById("txtpass").value = document.getElementById("txtpass").value;
+	   var hash = MD5(pass);
+	   document.getElementById('txtpass').value=hash;
+	  //return true;
+	}
+	
+	//document.getElementById('sub').value=1;
+	//document.login_frm.action="userlogin.php";
+	//document.login_frm.submit();
+	checkvalue();		 
+ }
+
+ function validateLogin1(){ 	
+	if(trim(document.getElementById('txtregno').value) == '')
+ 	{
+		alert("Please enter XAT ID");
+		document.getElementById('txtregno').focus();
+		return false; 
+ 	}else if(!isNumeric('txtregno')){
+		alert("XAT ID is invalid..");
+		document.getElementById('txtregno').focus();
+		return false; 
+	}
+	/*else if(trim(document.getElementById('txtregno').value).length > 8)
+ 	{
+		alert("Registration no is invalid");
+		document.getElementById('txtregno').focus();
+		return false; 
+ 	}*/
+	/*if(trim(document.getElementById('txtdob').value) == '')
+ 	{
+		alert("Please enter date of birth");
+		document.getElementById('txtdob').focus();
+		return false; 
+ 	}else if (isDate(document.getElementById('txtdob').value)==false){		
+		document.getElementById('txtdob').focus();
+		return false
+	}*/	
+		
+	if(trim(document.getElementById('txtpass').value) == '')
+ 	{
+		alert("Please enter a password");
+		document.getElementById('txtpass').focus();
+		return false; 
+ 	}else if(trim(document.getElementById('txtpass').value).length!= 8)
+ 	{
+		alert("password is invalid");
+		document.getElementById('txtpass').focus();
+		return false; 
+ 	}
+	//document.getElementById('sub').value=1;
+	//document.login_frm.action="userlogin.php";
+	//document.login_frm.submit();
+	checkvalue();		 
+ }
+
+function checkvalue()
+{
+	document.getElementById('Submit').disabled=true;
+	
+	document.hform.hdnuser.value =trim(document.getElementById("txtregno").value);  
+	document.hform.hdnpass.value = trim(document.getElementById("txtpass").value);
+	if(typeof LOGINCAPCHA != 'undefined' && LOGINCAPCHA != null && EnableCaptcha=='Y')
+	{
+		if(EnableCaptcha=='Y')
+		{
+			document.hform.txtCode.value = trim(document.getElementById("txtCode").value);
+			document.hform.security_check.value = trim(document.getElementById("security_check").value);
+		}
+		
+	}
+	
+	
+	// document.hform.hdnpass.value = MD5(document.getElementById("txtpass").value + document.getElementById("rand_number").value);
+
+	//document.hform.hdndob.value = document.getElementById("txtdob").value;
+	document.hform.hdnop.value = document.login_frm.op.value;
+
+	document.hform.hdrand_number.value = document.getElementById("rand_number").value;
+	
+
+	document.hform.hdnsub.value=1;
+	document.getElementById("txtregno").value = "";  
+	document.getElementById("txtpass").value = "";  
+	//document.getElementById("txtdob").value = "";
+	document.login_frm.op.value="";
+	document.getElementById("rand_number").value="";
+	
+	if(typeof LOGINCAPCHA != 'undefined' && LOGINCAPCHA != null && EnableCaptcha=='Y')
+	{
+		document.getElementById("txtCode").value="";
+		document.getElementById("security_check").value="";
+	}
+	
+
+	//alert(document.hform.hdnop.value);
+	document.hform.submit();  
+}
+function loginvalidationcheck(pass)
+{
+	$.ajax({
+		type:"POST",
+		data:$("#login_frm").serialize(),
+		url: "loginvalidationcheck.php",
+		success: function(response){
+			if($.trim(response)!="success")
+			{
+				$("#loginError").html(response);
+				$(".loginError").html("");
+				document.getElementById('txtpass').value=pass;
+			}
+			else
+			{	
+				$("#loginError, .loginError").html("");
+				checkvalue();
+			}
+		}
+	});
+} 
+function alphadigits(e){	
+	var key;
+	var keychar;
+	if (window.event){
+		key = window.event.keyCode;		
+	}else if (e){
+		key = e.which;		
+	}
+	else
+		return true;
+
+	if((key == 8) || (key == 0) || (key == 48))
+		return true;
+		
+	keychar = String.fromCharCode(key);
+	keychar = keychar.toLowerCase();
+	if(key!=32)
+	{ 		
+		invalids = "`~@#$%^*()-&+=\|{}[]:;'\"<>?/!,\\._";
+		//invalids = "`~@#$%^*()_+=\|{}[]:;'\"<>&?/!,\\";
+		for(i=0; i<invalids.length; i++) {
+			if(keychar.indexOf(invalids.charAt(i)) >= 0 || keychar==false) {				           			  
+				return false;               
+			}
+		}
+	}
+	return true;		
+}
+</script>
+</head>
+	
+<script>
+	var TAB_DEVICE = '0';
+	var EnableCaptcha='Y';
+	var LOGINCAPCHA='1';
+</script>
+<body topmargin="0" leftmargin="0" rightmargin="0" marginheight="0" marginwidth="0" oncontextmenu="return false;" onpageshow="if (event.persisted) noBack();">
+	<script async src="https://www.googletagmanager.com/gtag/js?id=UA-125917244-1"></script>
+<script>
+  window.dataLayer = window.dataLayer || [];
+  function gtag(){dataLayer.push(arguments);}
+  gtag('js', new Date());
+  gtag('config', 'UA-125917244-1');
+</script>
+<script>
+//if(TAB_DEVICE == 0){
+	window.history.forward(1);
+//}else if(TAB_DEVICE > 0){
+//	 if (event.persisted) {
+ //       window.history.forward();
+//    }
+//}
+
+</script>
